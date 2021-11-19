@@ -31,7 +31,7 @@ class CNN(nn.Module):
 def main():
     nn = CNN()
     optimizer = torch.optim.Adam(nn.parameters(), lr=0.1)
-    loss_func = torch.nn.CrossEntropyLoss()
+    loss_func = torch.nn.MSELoss()
     print(nn)
     for i in range(10000):
         input = torch.rand(1,1,16,16)

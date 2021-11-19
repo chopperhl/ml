@@ -5,13 +5,9 @@ import torch.nn as nn
 class CNN(nn.Module):
     def __init__(self):
        super(CNN,self).__init__()
-       #1,16,16
-       self.conv1 = nn.Linear(16,16)
-
-       #2,8,8
-       self.conv2 = nn.Linear(16,16)
-       #4,4,4
-       self.out = nn.Linear(16,1)
+       self.conv1 = nn.Linear(16,64)
+       self.conv2 = nn.Linear(64,128)
+       self.out = nn.Linear(128,1)
 
     def forward(self,x):
        x = self.conv1(x)
@@ -22,9 +18,9 @@ class CNN(nn.Module):
 def main():
     nn = CNN()
     optimizer = torch.optim.Adam(nn.parameters(), lr=0.1)
-    loss_func = torch.nn.CrossEntropyLoss()
+    loss_func = torch.nn.MSELoss()
     print(nn)
-    for i in range(10):
+    for i in range(1000):
         input = torch.rand(1,1,1,16)
         max = input.max().view(1,1)
         results = nn(input)

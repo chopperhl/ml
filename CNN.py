@@ -1,8 +1,10 @@
 from os import path
 import numpy as np
+from numpy.lib.type_check import imag
 import torch
 import torch.nn as nn
 import torchvision
+import sys
 import torch.utils.data as data
 import cv2 as cv
 
@@ -65,7 +67,7 @@ def main(train_loader):
     return nn
 
 
-def test(nn):
+def test(nn,file):
     test_data = torchvision.datasets.MNIST(root='./mnist/', train=False)
     test_x = torch.unsqueeze(test_data.data, dim=1).type(torch.FloatTensor)[:10]
     print(test_x.shape)
@@ -74,7 +76,7 @@ def test(nn):
     pred_y = torch.max(test_output, 1)[1].numpy()
     print(pred_y, 'prediction number')
     print(test_y.numpy(), 'real number')
-    img = cv.imread("./test_2.png",cv.IMREAD_GRAYSCALE)
+    img = cv.imread(file,cv.IMREAD_GRAYSCALE)
     p = cv.resize(img,(28,28))
     p = cv.fastNlMeansDenoising(p)
     _, p = cv.threshold(p, 127, 255, cv.THRESH_BINARY_INV)
@@ -83,15 +85,17 @@ def test(nn):
     input_img = torch.from_numpy(np.array(p))
     input_img = torch.unsqueeze(input_img,0).type(torch.FloatTensor)
     input_img = torch.unsqueeze(input_img,0)
-    print(input_img.shape)
     out_png = nn(input_img)
     print(torch.max(out_png,1)[1].numpy())
 
 if __name__ == '__main__':
     if path.exists("./model"):
+        if len(sys.argv) <= 1:
+            print("no image path")
+            exit(1)
+        img = sys.argv[1]
         model = torch.load("./model")
-        test(model)
+        test(model,img)
     else:
         loader =  check_dataset()
         nn = main(loader)
-        test(nn)

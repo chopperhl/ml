@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import torchvision
 import torch.utils.data as data
-import PIL.Image as Image
+import cv2 as cv
 
 
 class CNN(nn.Module):
@@ -50,7 +50,7 @@ def main(train_loader):
     optimizer = torch.optim.Adam(nn.parameters(), lr=0.001)
     loss_func = torch.nn.CrossEntropyLoss()
     print(nn)
-    for i in range(1):
+    for i in range(2):
         for step,(x,y) in enumerate(train_loader):
             print(x)
             print(y)
@@ -74,8 +74,12 @@ def test(nn):
     pred_y = torch.max(test_output, 1)[1].numpy()
     print(pred_y, 'prediction number')
     print(test_y.numpy(), 'real number')
-    p = Image.open("./test_1.png").resize((28,28),Image.ANTIALIAS)
-    p = p.convert("1")
+    img = cv.imread("./test_2.png",cv.IMREAD_GRAYSCALE)
+    p = cv.resize(img,(28,28))
+    p = cv.fastNlMeansDenoising(p)
+    _, p = cv.threshold(p, 127, 255, cv.THRESH_BINARY_INV)
+    #cv.imshow("src", p) 
+    #cv.waitKey(0) 
     input_img = torch.from_numpy(np.array(p))
     input_img = torch.unsqueeze(input_img,0).type(torch.FloatTensor)
     input_img = torch.unsqueeze(input_img,0)

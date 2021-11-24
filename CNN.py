@@ -10,21 +10,21 @@ import cv2 as cv
 class CNN(nn.Module):
     def __init__(self):
        super(CNN,self).__init__()
-       #1,16,16
+       #1,28,28
        self.conv1 = nn.Sequential(
                nn.Conv2d(1,8,kernel_size=5,stride=1,padding=2),
                nn.ReLU(),
                nn.MaxPool2d(2)
         )
 
-       #8,8,8
+       #8,14,14
        self.conv2 = nn.Sequential(
                nn.Conv2d(8,32,kernel_size=5,stride=1,padding=2),
                nn.ReLU(),
                nn.MaxPool2d(2)
         )
 
-       #32,4,4
+       #32,7,7
        self.out = nn.Linear(7*7*32,10)
 
     def forward(self,x):

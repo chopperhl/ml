@@ -89,6 +89,7 @@ def test(nn,file):
     print(torch.max(out_png,1)[1].numpy())
 
 if __name__ == '__main__':
+    loader =  check_dataset()
     if path.exists("./model"):
         if len(sys.argv) <= 1:
             print("no image path")
@@ -97,5 +98,4 @@ if __name__ == '__main__':
         model = torch.load("./model")
         test(model,img)
     else:
-        loader =  check_dataset()
         nn = main(loader)
